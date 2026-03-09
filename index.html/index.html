@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SRAM Model</title>
+
+<style>
+
+body{
+font-family:Arial;
+max-width:900px;
+margin:auto;
+padding:40px;
+}
+
+.card{
+border:1px solid #ddd;
+border-radius:10px;
+padding:20px;
+margin-top:20px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Systemic Responsibility Allocation Model</h1>
+
+<p>
+A framework for analyzing how responsibility and systemic risk are distributed across organizational roles.
+</p>
+
+<div class="card">
+
+<h2>Role Structure</h2>
+
+<label>Capacity</label>
+
+<select id="capacity">
+<option value="1">Operational role</option>
+<option value="2">Team supervisor</option>
+<option value="3">Managerial authority</option>
+<option value="4">Strategic authority</option>
+<option value="5">System-level authority</option>
+</select>
+
+<br><br>
+
+<label>Impact</label>
+
+<select id="impact">
+<option value="1">Individual tasks</option>
+<option value="2">Team impact</option>
+<option value="3">Department impact</option>
+<option value="4">Organizational impact</option>
+<option value="5">System-wide impact</option>
+</select>
+
+<br><br>
+
+<label>Foreseeability</label>
+
+<select id="foresee">
+<option value="1">Highly uncertain</option>
+<option value="2">Limited knowledge</option>
+<option value="3">Moderate prediction</option>
+<option value="4">Strong expertise</option>
+<option value="5">Highly foreseeable</option>
+</select>
+
+<br><br>
+
+<label>Exit Conditions</label>
+
+<select id="exit">
+<option value="1">No exit</option>
+<option value="2">Difficult replacement</option>
+<option value="3">Moderate flexibility</option>
+<option value="4">Replaceable</option>
+<option value="5">Highly substitutable</option>
+</select>
+
+<br><br>
+
+<button onclick="calculate()">Analyze</button>
+
+</div>
+
+<div class="card">
+
+<h2>Responsibility Load</h2>
+
+<p id="result">Waiting for analysis</p>
+
+</div>
+
+<script>
+
+function calculate(){
+
+let C=document.getElementById("capacity").value
+let I=document.getElementById("impact").value
+let F=document.getElementById("foresee").value
+let E=document.getElementById("exit").value
+
+let score=(C*I*F)/E
+
+let level="Low"
+
+if(score>20){
+level="High"
+}
+else if(score>10){
+level="Moderate"
+}
+
+document.getElementById("result").innerText=
+"Responsibility level: "+level
+
+}
+
+</script>
+
+</body>
+</html>
