@@ -1,131 +1,606 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>SRAM Model</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Systemic Responsibility Allocation Model</title>
+  <style>
+    :root{
+      --bg:#f7f7f5;
+      --card:#ffffff;
+      --text:#111111;
+      --muted:#5f5f5f;
+      --line:#d9d9d4;
+      --accent:#111111;
+      --accent-soft:#efefeb;
+    }
 
-<style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
 
-body{
-font-family:Arial;
-max-width:900px;
-margin:auto;
-padding:40px;
-}
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:32px 20px 60px;
+    }
 
-.card{
-border:1px solid #ddd;
-border-radius:10px;
-padding:20px;
-margin-top:20px;
-}
+    h1{
+      font-size:56px;
+      line-height:1.05;
+      margin:0 0 18px;
+      letter-spacing:-0.02em;
+    }
 
-button{
-padding:10px 20px;
-font-size:16px;
-}
+    .subtitle{
+      font-size:24px;
+      color:#222;
+      max-width:980px;
+      margin:0 0 28px;
+    }
 
-</style>
+    .intro{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:24px 24px 10px;
+      margin-bottom:24px;
+    }
 
+    .intro p{
+      margin:0 0 14px;
+      color:#222;
+      font-size:18px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:22px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:28px;
+    }
+
+    .section-title{
+      font-size:26px;
+      margin:0 0 10px;
+    }
+
+    .section-subtitle{
+      margin:0 0 24px;
+      color:var(--muted);
+      font-size:17px;
+    }
+
+    .variable-block{
+      margin-bottom:30px;
+      padding-bottom:22px;
+      border-bottom:1px solid #ecece7;
+    }
+
+    .variable-block:last-of-type{
+      border-bottom:none;
+      margin-bottom:10px;
+      padding-bottom:0;
+    }
+
+    .variable-name{
+      font-size:28px;
+      margin:0 0 8px;
+    }
+
+    .variable-layer{
+      display:inline-block;
+      font-size:13px;
+      color:#333;
+      background:#f0f0ec;
+      border:1px solid #ddd;
+      border-radius:999px;
+      padding:4px 10px;
+      margin-bottom:12px;
+    }
+
+    .variable-desc{
+      margin:0 0 8px;
+      font-size:17px;
+    }
+
+    .variable-use{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    .option-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+
+    .option-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px 14px 12px;
+      background:#fff;
+      cursor:pointer;
+      transition:0.18s ease;
+    }
+
+    .option-card:hover{
+      border-color:#999;
+      background:#fafaf7;
+    }
+
+    .option-card input{
+      display:none;
+    }
+
+    .option-card.active{
+      border:2px solid var(--accent);
+      background:var(--accent-soft);
+    }
+
+    .option-title{
+      font-size:16px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .option-text{
+      font-size:14px;
+      color:#444;
+    }
+
+    .actions{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+
+    button{
+      border:none;
+      border-radius:12px;
+      padding:14px 18px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .primary{
+      background:#111;
+      color:#fff;
+    }
+
+    .secondary{
+      background:#ecece8;
+      color:#111;
+    }
+
+    .result-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:16px;
+      margin-top:8px;
+    }
+
+    .result-box{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:18px;
+      background:#fcfcfa;
+    }
+
+    .result-label{
+      font-size:13px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:0.04em;
+      margin-bottom:8px;
+    }
+
+    .result-value{
+      font-size:26px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .result-text{
+      font-size:15px;
+      color:#333;
+    }
+
+    .full{
+      grid-column:1 / -1;
+    }
+
+    .footer-note{
+      margin-top:20px;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    @media (max-width: 860px){
+      h1{font-size:42px}
+      .subtitle{font-size:20px}
+      .option-grid,
+      .result-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <h1>Systemic Responsibility Allocation Model</h1>
+    <p class="subtitle">
+      A diagnostic framework for evaluating how responsibility, risk, and stability are distributed across organizational roles.
+    </p>
 
-<h1>Systemic Responsibility Allocation Model</h1>
+    <div class="intro">
+      <p>
+        This prototype does not ask only <strong>who is at fault</strong>. It asks how a role is structurally positioned:
+        how much leverage it has, how large its consequences may be, how foreseeable those consequences are, and whether
+        the role can be replaced, reversed, or redistributed.
+      </p>
+      <p>
+        The goal is to identify <strong>responsibility concentration</strong>, <strong>systemic risk exposure</strong>, and
+        <strong>structural fragility</strong> before harm escalates.
+      </p>
+    </div>
 
-<p>
-A framework for analyzing how responsibility and systemic risk are distributed across organizational roles.
-</p>
+    <div class="grid">
+      <div class="card">
+        <h2 class="section-title">Role Structure Inputs</h2>
+        <p class="section-subtitle">
+          Each variable below is visible and explained. Select the description that best matches the role you want to assess.
+        </p>
 
-<div class="card">
+        <div class="variable-block">
+          <div class="variable-layer">Structural Input</div>
+          <h3 class="variable-name">Capacity</h3>
+          <p class="variable-desc">
+            Capacity refers to how much <strong>structural leverage</strong> a role has over outcomes.
+          </p>
+          <p class="variable-use">
+            In this model, higher capacity means a role can shape more consequences, so it tends to increase responsibility concentration.
+          </p>
+          <div class="option-grid" data-group="capacity">
+            <label class="option-card active">
+              <input type="radio" name="capacity" value="1" checked>
+              <div class="option-title">Operational</div>
+              <div class="option-text">Primarily executes tasks with limited authority over wider outcomes.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="capacity" value="2">
+              <div class="option-title">Supervisory</div>
+              <div class="option-text">Coordinates a team or small function and can shape local decisions.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="capacity" value="3">
+              <div class="option-title">Managerial</div>
+              <div class="option-text">Controls resources or decisions affecting a unit or department.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="capacity" value="4">
+              <div class="option-title">Strategic</div>
+              <div class="option-text">Influences organization-level priorities and high-impact decisions.</div>
+            </label>
+          </div>
+        </div>
 
-<h2>Role Structure</h2>
+        <div class="variable-block">
+          <div class="variable-layer">Structural Input</div>
+          <h3 class="variable-name">Impact</h3>
+          <p class="variable-desc">
+            Impact refers to the likely <strong>scale and depth of consequences</strong> associated with the role.
+          </p>
+          <p class="variable-use">
+            Higher impact increases both the ethical importance of the role and the degree of systemic risk if decisions fail.
+          </p>
+          <div class="option-grid" data-group="impact">
+            <label class="option-card active">
+              <input type="radio" name="impact" value="1" checked>
+              <div class="option-title">Local</div>
+              <div class="option-text">Effects are mostly limited to individual tasks or a narrow workflow.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="impact" value="2">
+              <div class="option-title">Team</div>
+              <div class="option-text">Consequences affect a small team, service line, or local project.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="impact" value="3">
+              <div class="option-title">Organizational</div>
+              <div class="option-text">Effects can spread across a department or the organization as a whole.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="impact" value="4">
+              <div class="option-title">System-Level</div>
+              <div class="option-text">Consequences may extend to external stakeholders, institutions, or public systems.</div>
+            </label>
+          </div>
+        </div>
 
-<label>Capacity</label>
+        <div class="variable-block">
+          <div class="variable-layer">Structural Input</div>
+          <h3 class="variable-name">Foreseeability</h3>
+          <p class="variable-desc">
+            Foreseeability refers to how far the consequences of this role can be <strong>reasonably anticipated</strong>.
+          </p>
+          <p class="variable-use">
+            This variable matters especially for <strong>Ex Ante responsibility</strong>: the more predictable the consequences, the stronger the preventive obligation.
+          </p>
+          <div class="option-grid" data-group="foreseeability">
+            <label class="option-card">
+              <input type="radio" name="foreseeability" value="1">
+              <div class="option-title">Low</div>
+              <div class="option-text">Outcomes are uncertain, experimental, or poorly understood.</div>
+            </label>
+            <label class="option-card active">
+              <input type="radio" name="foreseeability" value="2" checked>
+              <div class="option-title">Moderate</div>
+              <div class="option-text">Some likely consequences can be predicted, but uncertainty remains high.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="foreseeability" value="3">
+              <div class="option-title">High</div>
+              <div class="option-text">Professional knowledge makes the consequences broadly knowable in advance.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="foreseeability" value="4">
+              <div class="option-title">Very High</div>
+              <div class="option-text">The role is expected to foresee consequences with strong reliability.</div>
+            </label>
+          </div>
+        </div>
 
-<select id="capacity">
-<option value="1">Operational role</option>
-<option value="2">Team supervisor</option>
-<option value="3">Managerial authority</option>
-<option value="4">Strategic authority</option>
-<option value="5">System-level authority</option>
-</select>
+        <div class="variable-block">
+          <div class="variable-layer">Structural Input</div>
+          <h3 class="variable-name">Exit Conditions</h3>
+          <p class="variable-desc">
+            Exit refers to whether influence from this role can be <strong>reduced, replaced, reversed, or redistributed</strong>.
+          </p>
+          <p class="variable-use">
+            Weak exit conditions make responsibility accumulate. Strong exit conditions reduce fragility and improve structural stability.
+          </p>
+          <div class="option-grid" data-group="exit">
+            <label class="option-card">
+              <input type="radio" name="exit" value="1">
+              <div class="option-title">Minimal Exit</div>
+              <div class="option-text">No practical replacement, rollback, or safety valve exists.</div>
+            </label>
+            <label class="option-card active">
+              <input type="radio" name="exit" value="2" checked>
+              <div class="option-title">Limited Exit</div>
+              <div class="option-text">Substitution exists, but only with difficulty or delay.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="exit" value="3">
+              <div class="option-title">Moderate Exit</div>
+              <div class="option-text">Review, substitution, or reversal is possible under some conditions.</div>
+            </label>
+            <label class="option-card">
+              <input type="radio" name="exit" value="4">
+              <div class="option-title">Strong Exit</div>
+              <div class="option-text">The role is replaceable, decisions are reviewable, and rollback is feasible.</div>
+            </label>
+          </div>
+        </div>
 
-<br><br>
+        <div class="actions">
+          <button class="primary" onclick="analyzeModel()">Analyze Role</button>
+          <button class="secondary" onclick="resetModel()">Reset</button>
+        </div>
+      </div>
 
-<label>Impact</label>
+      <div class="card">
+        <h2 class="section-title">Layered Analysis</h2>
+        <p class="section-subtitle">
+          The output below separates structural load, preventive responsibility, retrospective liability tendency, and stability.
+        </p>
 
-<select id="impact">
-<option value="1">Individual tasks</option>
-<option value="2">Team impact</option>
-<option value="3">Department impact</option>
-<option value="4">Organizational impact</option>
-<option value="5">System-wide impact</option>
-</select>
+        <div class="result-grid">
+          <div class="result-box">
+            <div class="result-label">Responsibility Concentration</div>
+            <div class="result-value" id="respLevel">Moderate</div>
+            <div class="result-text" id="respText">
+              This role carries a moderate amount of concentrated responsibility relative to its structural position.
+            </div>
+          </div>
 
-<br><br>
+          <div class="result-box">
+            <div class="result-label">Systemic Risk Exposure</div>
+            <div class="result-value" id="riskLevel">Moderate</div>
+            <div class="result-text" id="riskText">
+              Risk is present but not yet strongly amplified by structure.
+            </div>
+          </div>
 
-<label>Foreseeability</label>
+          <div class="result-box">
+            <div class="result-label">Ex Ante Responsibility</div>
+            <div class="result-value" id="exAnteLevel">Moderate</div>
+            <div class="result-text" id="exAnteText">
+              The role has a moderate preventive obligation because some consequences are foreseeable in advance.
+            </div>
+          </div>
 
-<select id="foresee">
-<option value="1">Highly uncertain</option>
-<option value="2">Limited knowledge</option>
-<option value="3">Moderate prediction</option>
-<option value="4">Strong expertise</option>
-<option value="5">Highly foreseeable</option>
-</select>
+          <div class="result-box">
+            <div class="result-label">Structural Stability</div>
+            <div class="result-value" id="stabilityLevel">Moderate</div>
+            <div class="result-text" id="stabilityText">
+              The structure shows some flexibility, but still contains concentrated points of dependence.
+            </div>
+          </div>
 
-<br><br>
+          <div class="result-box full">
+            <div class="result-label">Interpretive Summary</div>
+            <div class="result-value" id="summaryTitle">Balanced but Watchful</div>
+            <div class="result-text" id="summaryText">
+              This role is not yet structurally extreme, but it should be monitored for increasing impact or declining exit flexibility.
+            </div>
+          </div>
+        </div>
 
-<label>Exit Conditions</label>
+        <p class="footer-note">
+          Prototype note: this version offers an interpretive framework rather than a final institutional standard. It is designed to demonstrate how structural ethics can be translated into an analyzable tool.
+        </p>
+      </div>
+    </div>
+  </div>
 
-<select id="exit">
-<option value="1">No exit</option>
-<option value="2">Difficult replacement</option>
-<option value="3">Moderate flexibility</option>
-<option value="4">Replaceable</option>
-<option value="5">Highly substitutable</option>
-</select>
+  <script>
+    function activateCards() {
+      const allGroups = document.querySelectorAll(".option-grid");
+      allGroups.forEach(group => {
+        const cards = group.querySelectorAll(".option-card");
+        cards.forEach(card => {
+          card.addEventListener("click", () => {
+            cards.forEach(c => c.classList.remove("active"));
+            card.classList.add("active");
+            const input = card.querySelector("input");
+            input.checked = true;
+          });
+        });
+      });
+    }
 
-<br><br>
+    function getValue(name) {
+      return parseInt(document.querySelector(`input[name="${name}"]:checked`).value, 10);
+    }
 
-<button onclick="calculate()">Analyze</button>
+    function band(score) {
+      if (score <= 4) return "Low";
+      if (score <= 8) return "Moderate";
+      if (score <= 12) return "High";
+      return "Very High";
+    }
 
-</div>
+    function analyzeModel() {
+      const C = getValue("capacity");
+      const I = getValue("impact");
+      const F = getValue("foreseeability");
+      const E = getValue("exit");
 
-<div class="card">
+      const responsibility = C + I + F + (5 - E);
+      const risk = C + I + (5 - E);
+      const exAnte = F + C;
+      const stabilityRaw = E + (5 - I);
+      const stability = band(stabilityRaw);
+      const responsibilityBand = band(responsibility);
+      const riskBand = band(risk);
+      const exAnteBand = band(exAnte);
 
-<h2>Responsibility Load</h2>
+      let respText = "";
+      let riskText = "";
+      let exAnteText = "";
+      let stabilityText = "";
+      let summaryTitle = "";
+      let summaryText = "";
 
-<p id="result">Waiting for analysis</p>
+      if (responsibilityBand === "Low") {
+        respText = "Responsibility is relatively dispersed. The role does not appear to be a major concentration point.";
+      } else if (responsibilityBand === "Moderate") {
+        respText = "This role carries a meaningful but not overwhelming concentration of responsibility.";
+      } else if (responsibilityBand === "High") {
+        respText = "This role is a significant responsibility node and should not be treated as administratively ordinary.";
+      } else {
+        respText = "Responsibility is highly concentrated in this role. Structural safeguards are strongly recommended.";
+      }
 
-</div>
+      if (riskBand === "Low") {
+        riskText = "Systemic spillover is limited under the current structural arrangement.";
+      } else if (riskBand === "Moderate") {
+        riskText = "Risk is visible but still partially containable under current conditions.";
+      } else if (riskBand === "High") {
+        riskText = "Failures in this role could propagate beyond immediate boundaries.";
+      } else {
+        riskText = "This role presents a strong systemic risk pathway, especially if oversight remains weak.";
+      }
 
-<script>
+      if (exAnteBand === "Low") {
+        exAnteText = "The role has limited preventive burden because consequences are only weakly foreseeable.";
+      } else if (exAnteBand === "Moderate") {
+        exAnteText = "The role carries moderate preventive responsibility and should monitor foreseeable harms.";
+      } else if (exAnteBand === "High") {
+        exAnteText = "This role is expected to act preventively because consequences are substantially foreseeable.";
+      } else {
+        exAnteText = "Preventive responsibility is extremely strong here. Failure to anticipate foreseeable harm would be difficult to justify.";
+      }
 
-function calculate(){
+      if (stability === "Low") {
+        stabilityText = "The structure is fragile: replacement, reversal, or safe redistribution appears weak.";
+      } else if (stability === "Moderate") {
+        stabilityText = "The role has some stabilizing features, but concentration remains structurally relevant.";
+      } else if (stability === "High") {
+        stabilityText = "The role is relatively stable because exit flexibility and containment are fairly strong.";
+      } else {
+        stabilityText = "This role is structurally resilient, with strong mechanisms for redistribution or reversal.";
+      }
 
-let C=document.getElementById("capacity").value
-let I=document.getElementById("impact").value
-let F=document.getElementById("foresee").value
-let E=document.getElementById("exit").value
+      if (responsibilityBand === "Very High" || riskBand === "Very High") {
+        summaryTitle = "Concentrated and Structurally Dangerous";
+        summaryText = "This role combines high leverage with weak exit protection. It should be reviewed for redistribution, oversight, or substitution capacity.";
+      } else if (exAnteBand === "High" || exAnteBand === "Very High") {
+        summaryTitle = "Preventive Responsibility Dominant";
+        summaryText = "The strongest feature of this role is not only what it can do, but what it should foresee before harm occurs.";
+      } else if (stability === "High" || stability === "Very High") {
+        summaryTitle = "Relatively Governable";
+        summaryText = "This role may still matter greatly, but its structural design appears more governable and less brittle than high-concentration roles.";
+      } else {
+        summaryTitle = "Balanced but Watchful";
+        summaryText = "This role is not yet structurally extreme, but rising impact or declining exit flexibility could quickly change its responsibility profile.";
+      }
 
-let score=(C*I*F)/E
+      document.getElementById("respLevel").innerText = responsibilityBand;
+      document.getElementById("respText").innerText = respText;
 
-let level="Low"
+      document.getElementById("riskLevel").innerText = riskBand;
+      document.getElementById("riskText").innerText = riskText;
 
-if(score>20){
-level="High"
-}
-else if(score>10){
-level="Moderate"
-}
+      document.getElementById("exAnteLevel").innerText = exAnteBand;
+      document.getElementById("exAnteText").innerText = exAnteText;
 
-document.getElementById("result").innerText=
-"Responsibility level: "+level
+      document.getElementById("stabilityLevel").innerText = stability;
+      document.getElementById("stabilityText").innerText = stabilityText;
 
-}
+      document.getElementById("summaryTitle").innerText = summaryTitle;
+      document.getElementById("summaryText").innerText = summaryText;
+    }
 
-</script>
+    function resetModel() {
+      const defaults = {
+        capacity: "1",
+        impact: "1",
+        foreseeability: "2",
+        exit: "2"
+      };
 
+      Object.keys(defaults).forEach(name => {
+        const input = document.querySelector(`input[name="${name}"][value="${defaults[name]}"]`);
+        if (input) {
+          input.checked = true;
+          const cards = document.querySelectorAll(`input[name="${name}"]`);
+          cards.forEach(i => i.closest(".option-card").classList.remove("active"));
+          input.closest(".option-card").classList.add("active");
+        }
+      });
+
+      analyzeModel();
+    }
+
+    activateCards();
+    analyzeModel();
+  </script>
 </body>
 </html>
